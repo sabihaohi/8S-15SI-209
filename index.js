@@ -6,7 +6,7 @@ frame.on("ready",()=>{
        //assets
        const bg = new Pic("assets/images/bg .png").center();
        const brightPicture = new Pic("assets/images/light.png").pos(1660,850).alp(0);
-       const fan = new Pic("assets/images/fan.png").centerReg().pos(1290,600);
+       const fan = new Pic("assets/images/fan.png").centerReg().pos(1330,600);
        //heading
        const header_rect = new Rectangle({width:W, height:120, color:"#ff7878"}).center().pos(0,0);
        const header_label = new Label (
@@ -26,7 +26,7 @@ frame.on("ready",()=>{
          rollBackgroundColor:"transparent",
          
   
-      }).center().pos(1742,270);
+      }).center().pos(1080,353);
   
       const toggolebutton = new Pic("assets/images/switch.png").center(powerBtn);
 
@@ -35,38 +35,60 @@ frame.on("ready",()=>{
    //slider for control..
    const button_slider = new Button({
        label: "",
-       width: 60,
-       height: 60,
-       backgroundColor: "red",
+       width: 75,
+       height: 75,
+       backgroundColor: "#2c67f2",
        borderWidth: 0,
        corner: 35
    }).sca(.4);
-   const slider_1 = new Slider({ 
+   const slider = new Slider({ 
        min:0,
        max:10,
        step: 1,
        currentValue: 0,
        button: button_slider,
-       barColor:"trasparent",
-
+       barColor:"",
    })
    .center()
-   .pos(610,1002).alp(1).sca(.8)
+   .pos(589,989).alp(1)
+   .change(() => {
+      zog(slider.currentValue); // 0-10 in steps of 1
+   });
   
   
 
-      powerBtn.on("click",()=>{
-         fan.animate({
-            props:{rotation:-360},
-            loop:true,
-            time:.9,
-            ease:"linear",
-            
-         })
-         brightPicture.alp(1);
+   //function
+   let toggle = false;
+   function startFan(){
+     Ticker.add(()=>{
+       fan.rotation += 10;
+       if(fan.rotation >=360){
+         fan.rotation = 0;
+       }
+     })
+   };
+ 
+   function stopFan(){
+     Ticker.add(()=>{
+       fan.rotation -= 10;
+     })
+   }
+   
+ 
+   powerBtn.on("click",()=>{
+     toggle = !toggle;
+     if(toggle){
+       brightPicture.alp(1);
+       startFan();
+     }
+     else{
+       brightPicture.alp(0);
+       stopFan();
+     }
+   })
 
 
-      })
+  
 
 
 
